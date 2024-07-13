@@ -1,0 +1,78 @@
+---
+# harmonica tabs format changelog
+# newer version is added to the top of the document
+# purpose of this format:
+# - preserve flexibility and simplicity of human-readable harmonica tabs
+# - explicitly state which harmonica is being used in the most unambiguous way possible
+# - carefully and respectfully handle all relevant credits
+# - allow beginners to easily access and appropriate written harmonica tabs for personal needs
+# - allow to programmatically switch between different harps / octaves
+# - allow to programmatically switch to a different notation (i.e. render html/txt/pdf/??, use custom note labels)
+# - allow to programmatically detect song difficulty
+# drawbacks of this format:
+# - no precise note timing information - user needs to have an external audio or be familiar with the song
+# - widechar symbols in the `map/%song part%/%paragraph%/%line%/%text%` require additional parameter in order to be synchronized with the `map/%song part%/%paragraph%/%line%/%hole%` due to the fact that different text editors render widechar symbols differently
+# - redundant quotations are needed in order to safely define strings that contain yaml-specific symbols
+# - additional programmatical tests are needed in order to ensure validity of yaml structure
+version:
+  4:
+    1:
+      0:
+        - added `song/background` tag for short and relevant lore summary of the song, which may affect how the player chooses to perform it
+        - added `map/%section%/%paragraph%/%line%/rapid_rant` bool tag for parts that require a lot of creative improvisation from the player and are not meant to be friendly by default
+        - renamed `file/lyrics/source` to `file/lyrics/links`
+        - made all tags optional and nullable (they can either be missing or contain null value)
+        - renamed `audio attachments/%.format%/files`, `audio attachments/%.format%/status` into `audio guide/%.format%/paths/%filename%/%description%`
+        - changed `audio attachments/%freeform attachment name%` to `audio guide/%dot audio format name%`
+        - moved `file/audio attachments` to `audio guide`
+    0:
+      12:
+        - moved tag `song/official` to `song/links`
+        - moved tag `file/audio attachment/pack` to `file/audio attachment/files`
+        - moved tags `song/original artist`, `song/original title` to `song/traceback`
+      11:
+        - `file/audio attachments/%item%` tag contents are now a dictionary
+        - added optional tag `file/audio attachments/pack`
+        - renamed tag `file/lyrics from` into `file/lyrics/source`
+        - moved tag `file/language` into `file/lyrics/language`
+        - moved tag `file/widechar` into `file/lyrics/widechar`
+        - moved tag `file/label position` into `file/lyrics/tab label position`
+        - renamed tag `file/limitations` into  `file/comment`
+      10:
+        - added optional `file/widechar` tag to hold predefined value that corresponds to specific gui text editors' widechar rendering behavior
+      9:
+        - added optional `file/limitations` tag to hold comments regarding `map` tag group contents
+        - added mandatory `file/label position` tag to hold an array of predefined values `rhythm`, `stress marks`
+      8:
+        - `file/audio attachments` tag is now mandatory, value = `None` if no audio available
+        - `file/audio attachments` tag supports short comments for each attachment
+        - format version is 3-digit
+      7:
+        - multiple `file/audio attachments` are possible
+        - optional `file/audio attachments` tag available
+        - removed tag `file/bpm` because it is irrelevant to real-life harmonica performance - some songs are impossible/not enjoyable to perform at original speed/timing
+      6:
+        - unbent harmonica notes per hole are now mandatory in the `harp/notes` tag
+        - added tag `song/original artist`
+        - added tag `song/original title`
+        - file naming supports optional subjective difficulty classification (easy/normal/hard/insane/custom) `[%difficulty%] %lyrics language% %optional data%.yaml`
+      5:
+        - introduced optional `harp/notes` tag for bent notes
+        - introduced optional `map/%song part%/%paragraph%/%line%/seriously` tag in order to exclude specific lines from song difficulty calculations and to indicate lack of overall responsibility/human replayability
+      4:
+        - introduced optional `map/%song part%/%paragraph%/%line%/%hole bend%` tag for note bending
+      3:
+        - `file/means` credits are now inline, following the format `%something% by %someone(s)% %link%`
+      2:
+        - moved tag `song/lyrics from` into `file/lyrics from`
+        - moved tag `song/language` into `file/language`
+      1:
+        - moved tag group `metadata` into `song`
+        - applied `.yaml` pointers to help avoid human errors due to data repetition
+      0:
+        - switched from `.txt` to `.yaml` format
+        - "introduced three-level `map` structure: `map/%song part%/%paragraph%/%line%/%text or hole%`"
+        - introduced detailed `metadata` tag group
+        - switched from redundant `.txt` file naming to `%lyrics language% %optional data%.yaml`
+        - switched to strict folder format `%tab folder%/%approximate country of origin%/%approximate category%/%unique latin code%/` so that each collection of harmonica tabs for one specific song exist in its own subfolder
+...
