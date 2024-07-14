@@ -315,9 +315,9 @@ class some_Columns_Difficulty:
             v = user_dict[k]
             if v <= 0:
                 return e_DifficultyTiers.easy
-            if v <= 0.025:
+            if v <= 0.01:
                 return e_DifficultyTiers.normal
-            elif v <= 0.01:
+            elif v <= 0.025:
                 return e_DifficultyTiers.hard
             elif v <= 0.04:
                 return e_DifficultyTiers.insane
@@ -392,4 +392,4 @@ class some_Columns_Difficulty:
             )
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2024.07.14
