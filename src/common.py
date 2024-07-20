@@ -44,15 +44,15 @@ def readf_yaml_ordered( src, encoding='utf-8' ):
         loader.flatten_mapping(node)
         return OrderedDict( loader.construct_pairs(node) )
     
+    #------------------------+++
+    # Actual code.
+
     OrderedLoader.add_constructor(
         yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
         __construct_mapping)
-    
-    #------------------------+++
-    # Actual code.
     
     stream = readf( src, encoding=encoding )
     return yaml.load( stream, OrderedLoader )
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2024.07.20
