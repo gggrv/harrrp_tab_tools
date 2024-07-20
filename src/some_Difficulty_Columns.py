@@ -19,7 +19,7 @@ class some_Columns_Difficulty:
     
     # All scores, available via this static interface,
     # are crude, experimental,
-    # do not have any scientific/musictheory background,
+    # do not have any scientific / music theory background,
     # are derived from common sense,
     # are not normalized and exist for testing purposes only.
     # Under no circumstances these scores and/or any information gained
@@ -314,7 +314,7 @@ class some_Columns_Difficulty:
             k = cls.score_bend
             v = user_dict[k]
             if v <= 0:
-                return e_DifficultyTiers.easy
+                return e_DifficultyTiers.beginner # don't skew votes from other scores
             if v <= 0.01:
                 return e_DifficultyTiers.normal
             elif v <= 0.025:
