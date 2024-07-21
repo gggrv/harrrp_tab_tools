@@ -1,0 +1,22 @@
+﻿license,program_one_line_description,src
+bsd_0,--,src\common.py
+gpl_v3,"Python static class ""Interface to Metadata Block Harmonica v4.0.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_0\Columns_Harmonica.py
+gpl_v3,"Python static class ""Interface to Metadata Block Map v4.0.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_0\Columns_Map.py
+gpl_v3,"Python static class ""Interface to Metadata Block Map/Section/Paragraph/Line v4.0.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_0\Columns_MapSectionParagraphLine.py
+gpl_v3,"Python static class ""Interface to Metadata Block File v4.0.11"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_11\Columns_File.py
+gpl_v3,"Python static class ""Interface to Metadata Block File/Lyrics v4.0.11"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_11\Columns_FileLyrics.py
+gpl_v3,"Python static class ""Interface to Metadata Block File/AudioAttachment v4.0.12"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_12\Columns_FileAudio.py
+gpl_v3,"Python static class ""Interface to Metadata Block Song v4.0.12"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_12\Columns_Song.py
+gpl_v3,"Python static class ""Interface to Metadata Block Map/Section/Paragraph/Line v4.0.4"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_4\Columns_MapSectionParagraphLine.py
+gpl_v3,"Python static class ""Interface to Metadata Block Map/Section/Paragraph/Line v4.0.5"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_5\Columns_MapSectionParagraphLine.py
+gpl_v3,"Python static class ""Interface to Metadata Block Harmonica v4.0.6"". Defines necessary metadata fields and relevant functionality.",src\format_4_0_6\Columns_Harmonica.py
+gpl_v3,"Python static class ""Interface to Metadata Block AudioGuide v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_AudioGuide.py
+gpl_v3,"Python static class ""Interface to Metadata Block File v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_File.py
+gpl_v3,"Python static class ""Interface to Metadata Block File/Lyrics v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_FileLyrics.py
+gpl_v3,"Python static class ""Interface to Metadata Block Map/Section/Paragraph/Line v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_MapSectionParagraphLine.py
+gpl_v3,"Python static class ""Interface to Metadata Block Song v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_Song.py
+gpl_v3,"Python static class ""Interface to Harmonica Tab v4.1.0"". Defines necessary metadata fields and relevant functionality.",src\format_4_1_0\Columns_Tab.py
+bsd_0,--,src\main_environment.py
+gpl_v3,"Python static class ""Difficulty Estimator"". Calculates complex intelligence data from given inputs.",src\some_Difficulty_Columns.py
+gpl_v3,"Python static class ""Interface to index.csv"". Defines necessary metadata fields and relevant functionality.",src\some_IndexCsv_Columns.py
+gpl_v3,"Python static class ""Harmonica Tab Interface Chooser"". Contains convenient endpoints that allow detection and interaction with several version-specific harmonica tab interfaces.",src\some_TabFormat_Columns.py

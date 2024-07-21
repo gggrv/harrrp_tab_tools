@@ -53,7 +53,7 @@ class some_Columns_MidiText:
     @classmethod
     def convert_to_csv( cls, src, encoding='utf-8' ):
         
-        # This function was appropriated from the following code:
+        # This function was inspired by the following code:
         # https://github.com/DrayfieldR/MidiAnalyzer
         # https://github.com/DrayfieldR/MidiAnalyzer/blob/main/midi_analyzer.py
 
