@@ -41,10 +41,11 @@ class some_Columns_Difficulty:
     # judgement regarding the data they were applied to.
     
     # independent scores
-    score_melody_variety = 'score_melody_variety' # higher score = melody within the tab seems more varied
-    score_jump = 'score_jump' # higher score = more jumps between notes
     score_bend = 'score_bend' # higher score = more/heavier bends
+    score_jump = 'score_jump' # higher score = more jumps between notes
+    score_melody_variety = 'score_melody_variety' # higher score = melody within the tab seems more varied
     score_same_breath = 'score_same_breath' # higher score = more physically demanding
+    score_shape = 'score_shape' # higher score = more physically demanding
     
     # composite results
     tier = 'tier' # higher tier = more difficult
@@ -406,4 +407,4 @@ class some_Columns_Difficulty:
             )
 
 #---------------------------------------------------------------------------+++
-# 2024.07.14
+# 2024.09.22

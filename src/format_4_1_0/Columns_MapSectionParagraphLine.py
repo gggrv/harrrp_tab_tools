@@ -38,6 +38,7 @@ class Columns_MapSectionParagraphLine:
     bends = '+'
     notes = 'x'
     lyrics = 't'
+    shape = 's'
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2024.09.22

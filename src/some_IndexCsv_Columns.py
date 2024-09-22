@@ -59,10 +59,11 @@ class some_Columns_IndexCsv:
     score_sort_order = some_Columns_Difficulty.sort_order
     score_tier = some_Columns_Difficulty.tier
     #
-    score_melody_variety = some_Columns_Difficulty.score_melody_variety
-    score_jump = some_Columns_Difficulty.score_jump
     score_bend = some_Columns_Difficulty.score_bend
+    score_jump = some_Columns_Difficulty.score_jump
+    score_melody_variety = some_Columns_Difficulty.score_melody_variety
     score_same_breath = some_Columns_Difficulty.score_same_breath
+    score_shape = some_Columns_Difficulty.score_shape
 
 #---------------------------------------------------------------------------+++
-# 2024.06.18
+# 2024.09.22

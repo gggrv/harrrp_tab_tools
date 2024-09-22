@@ -18,6 +18,7 @@ version:
   4:
     1:
       0:
+        - added `map/%section%/%paragraph%/%line%/s` tag for the suggested mouth shape
         - added `song/background` tag for short and relevant lore summary of the song, which may affect how the player chooses to perform it
         - added `map/%section%/%paragraph%/%line%/rapid_rant` bool tag for parts that require a lot of creative improvisation from the player and are not meant to be friendly by default
         - renamed `file/lyrics/source` to `file/lyrics/links`
