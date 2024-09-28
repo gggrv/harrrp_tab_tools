@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 # embedded in python
 import os
 # pip install
+import mido
 import pretty_midi
 # same project
 from src.common import savef
@@ -51,11 +52,92 @@ class some_Columns_MidiText:
         ]
     
     @classmethod
+    def ensure_compliance_with_type1_midi_format( cls, src ):
+        
+        # Some MIDI editors export midi files that do not 100% percent
+        # comply with the centuries old midi format specifications.
+        # Still, most MIDI players can playback such odd midi files
+        # without problems.
+        # On the other hand, currently existing open source midi parsers
+        # generally yield unreliable results.
+        # This function attetmpts to hard fix given midi file.
+        
+        # This function was created with the aid of an AI assistant.
+        
+        # read from disk
+        midi = mido.MidiFile( src )
+        
+        # make sure i have enough tracks
+        how_many_tracks = len( midi.tracks )
+        if how_many_tracks == 0:
+            log.error( 'this midi does not have any tracks, not doing anything' )
+            return
+        elif how_many_tracks == 1:
+            log.debug( 'this midi does not have any tracks apart from track №0, no need to do anything' )
+            return
+        
+        # iterate each non-zero track and cut any
+        # `events that should be in track №01`
+        events_that_should_be_in_track_zero = {
+            'key_signature': [],
+            'set_tempo': [],
+            'time_signature': [],
+            'tempo': [],
+            }
+        encountered_types = []
+        for track in midi.tracks[1:]:
+            
+            # iterate each event in this track
+            eventiloc = 0
+            while eventiloc < len(track):
+                
+                # short name for convenience
+                ev = track[ eventiloc ]
+                k = ev.type
+                encountered_types.append( k )
+                
+                if k in events_that_should_be_in_track_zero:
+                    
+                    # move it to the temp list
+                    events_that_should_be_in_track_zero[ k ].append( ev )
+                    
+                    # remove it from this track
+                    track.pop( eventiloc )
+                    
+                else:
+                    # advance
+                    eventiloc += 1
+    
+        encountered_types = set( encountered_types )
+    
+        # move these found events to the actual track №0
+        how_many_events_moved = 0
+        for k, events in events_that_should_be_in_track_zero.items():    
+            midi.tracks[0].extend( events )
+            how_many_events_moved += len(events)
+            
+        # make sure i have moved at least one event
+        if how_many_events_moved==0:
+            # no reason to replace old file
+            return
+    
+        # rename old midi
+        root, basename = os.path.split( src )
+        f, ext = os.path.splitext( basename )
+        old_midi_src = os.path.join( root, f'{f}__old{ext}' )
+        os.rename( src, old_midi_src )
+        
+        # save to disk the new midi
+        midi.save( src )
+    
+    @classmethod
     def convert_to_csv( cls, src, encoding='utf-8' ):
         
         # This function was inspired by the following code:
         # https://github.com/DrayfieldR/MidiAnalyzer
         # https://github.com/DrayfieldR/MidiAnalyzer/blob/main/midi_analyzer.py
+
+        cls.ensure_compliance_with_type1_midi_format( src )
 
         # use the library to process data
         midi_file = pretty_midi.PrettyMIDI( src )
