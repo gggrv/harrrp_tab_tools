@@ -86,17 +86,19 @@ class Columns_Map:
                 results.append( result )
                 
         else:
-            raise ValueError
+            raise ValueError( f'Unsupported mod scope: {mod_scope}' )
                     
         return results
-
 
     @classmethod
     def paste_timecodes( cls, src ):
         
         # This is a convenient function that operates of the text file,
-        # rather then ion .yaml dict, and pastes timecodes to each
+        # rather then on the .yaml dict, and pastes timecodes to each
         # map/section/paragraph/line.
+        
+        # Timecodes are expected to be in the widely-used music label format
+        # of the `Audacity` software.
         
         current_address = [
             None, # section_name
@@ -203,7 +205,7 @@ class Columns_Map:
         #------------------------+++
         # Actual code.
         
-        # make sure i actuall have the timecodes
+        # make sure i actually have the timecodes
         timecodes_dict =__parse_timecodes()
         if timecodes_dict is None:
             return
@@ -263,11 +265,6 @@ class Columns_Map:
         
         def __parse_line( song_section, paragraph, line, harp_dict ):
                 
-            # TODO
-            # adjust this function to be called every paragraph,
-            # combine all `x` and `+`,
-            # parse combined giant `x` and `+` only once at the end
-                
             #------------------------+++
             # Definitions.
         
@@ -323,8 +320,8 @@ class Columns_Map:
                     # Here I am interested only in the overall
                     # note differences --- I treat all existing notes as
                     # one big phrase.
-                    # Any non-notes should be removed before calling
-                    # this function.
+                    # Any non-notes (for example whitespaces)
+                    # should be removed before calling this function.
                     
                     # prepare the array
                     holeilocs = pd.Series( index=vs.index, dtype=int )
@@ -408,9 +405,6 @@ class Columns_Map:
                 # so at this moment i have saved various phrases from this
                 # line to the big list of phrases --- it will accumulate
                 # phrases for the whole map
-                # TODO
-                # combine all `x+` and call this function only once for
-                # the giant accumulated `x+`
                 
                 #print()
             
@@ -496,4 +490,4 @@ class Columns_Map:
         return result_dict
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2024.09.28

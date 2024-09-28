@@ -65,10 +65,21 @@ class some_Columns_MidiText:
         root_folder, basename = os.path.split( src )
         dest = os.path.join(
             root_folder,
-            f"{basename}.csv" # will looks like `some_audio_guide.mid.csv`
+            f'{basename}.csv' # will look like `some_audio_guide.mid.csv`
             )
 
-        # save each named track into csv, stacked vertically
+        # save each named track into csv, stacked vertically:
+        """
+        column1, column2, column3
+        voice
+        %actual csv contents%
+        column1, column2, column3
+        synth
+        %actual csv contents%
+        """
+        # in other words, i will have one csv file with
+        # multiple partitions, each partition is uniquely identified by
+        # instrument name
         instruments = midi_file.instruments
         text_csv_header = ','.join(cls.ORDER)
         lines = []
@@ -92,4 +103,4 @@ class some_Columns_MidiText:
         savef( dest, text )
     
 #---------------------------------------------------------------------------+++
-# 2024.06.30
+# 2024.09.28
