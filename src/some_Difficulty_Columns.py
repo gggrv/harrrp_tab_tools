@@ -171,8 +171,8 @@ class some_Columns_Difficulty:
         
         max_jump = differences.max()
         middle_iloc = len(differences.index)//2
-        average_jump = differences.sort_values()[middle_iloc]
-        sum_jumps = differences.sum()
+        average_jump = differences.sort_values().iloc[middle_iloc]
+        sum_jumps = max( differences.sum(), 0.0000001 ) # avoid division by zero
         
         # relaxing = 1 jump
         # ok = 2..3 jumps
