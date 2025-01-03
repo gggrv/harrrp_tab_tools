@@ -29,7 +29,7 @@ class some_Columns_MidiText:
     
     # Not all platforms have convenient midi libraries. Additionally,
     # selective playback of midi notes according to a list of known
-    # timecodes is a complex and bug-prone endeavor. In order
+    # timecodes is a complex and bug-prone undertaking. In order
     # to enable efficient fragment extraction and easy debugging,
     # it makes sense to sketch the core logic using some
     # easy-to-parse temporary format with fixed timestamps,
@@ -54,13 +54,11 @@ class some_Columns_MidiText:
     @classmethod
     def ensure_compliance_with_type1_midi_format( cls, src ):
         
-        # Some MIDI editors export midi files that do not 100% percent
-        # comply with the centuries old midi format specifications.
-        # Still, most MIDI players can playback such odd midi files
-        # without problems.
-        # On the other hand, currently existing open source midi parsers
-        # generally yield unreliable results.
-        # This function attetmpts to hard fix given midi file.
+        # Some MIDI editors export `TempoEvents` in an odd way,
+        # that does not 100% percent comply with the expected format specifications.
+        # Most MIDI players can play such "broken" files without problems.
+        # Most MIDI parsers mess up expected timecodes.
+        # This function attetmpts to fix such "broken" files.
         
         # This function was created with the aid of an AI assistant.
         
@@ -77,7 +75,7 @@ class some_Columns_MidiText:
             return
         
         # iterate each non-zero track and cut any
-        # `events that should be in track №01`
+        # `events that should be in track №0`
         events_that_should_be_in_track_zero = {
             'key_signature': [],
             'set_tempo': [],
@@ -110,7 +108,7 @@ class some_Columns_MidiText:
     
         encountered_types = set( encountered_types )
     
-        # move these found events to the actual track №0
+        # paste these found events to the actual track №0
         how_many_events_moved = 0
         for k, events in events_that_should_be_in_track_zero.items():    
             midi.tracks[0].extend( events )
@@ -185,4 +183,4 @@ class some_Columns_MidiText:
         savef( dest, text )
     
 #---------------------------------------------------------------------------+++
-# 2024.09.28
+# 2025.01.03
