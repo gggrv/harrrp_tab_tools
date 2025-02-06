@@ -31,8 +31,8 @@ class some_Columns_IndexCsv:
     
     # Static interface that allows to conveniently index the contents of
     # given folder with harmonica tabs.
-    # The resulting index contains minimal
-    # necessary information, that allows to easily understand differences
+    # The resulting index contains minimal necessary information
+    # that allows to easily understand differences
     # between various harmonica tabs, since same song may be tabbed
     # differently.
     
@@ -66,4 +66,4 @@ class some_Columns_IndexCsv:
     score_shape = some_Columns_Difficulty.score_shape
 
 #---------------------------------------------------------------------------+++
-# 2024.09.22
+# 2025.02.03

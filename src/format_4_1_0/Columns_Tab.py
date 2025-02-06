@@ -74,7 +74,7 @@ class Columns_Tab:
             tab_dict = readf_yaml_ordered( src )
         except Exception as ex:
             log.error( f'error reading file {src}' )
-            log.error( f'{ex}' )
+            log.error( f'{type(ex)}{ex}' )
             return
         
         # make sure the version is ok

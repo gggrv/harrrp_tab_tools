@@ -234,8 +234,8 @@ class some_Columns_Difficulty:
         average_count = len( bends_df[1][ (bends_df[1]>=average_bend) & (bends_df[1]<max_bend) ].index )
         max_count = len( bends_df[1][bends_df[1]>=max_bend].index )
         
-        # acceptable = 1 bend
-        # concerning = 2 bends
+        # more or less acceptable = 1 bend
+        # not acceptable and very concerning = 2 bends
         # nope = 3+ bends
         
         impact_average = __get_impact(average_bend)
@@ -401,10 +401,10 @@ class some_Columns_Difficulty:
         user_dict[cls.sort_order] = round(
             0.05/max( user_dict[cls.score_melody_variety], 0.0001 ) # not very impactful (boring melodies are harder to play)
             + 0.5*user_dict[cls.score_jump] # little impact (jumps contribute to difficulty less then other scores)
-            + 20.0*user_dict[cls.score_bend] # large impact & mitigating multiplier because score is 10 times less then others
+            + 20.0*user_dict[cls.score_bend] # large impact & mitigating multiplier because score is 10 times less than others
             + 0.7*user_dict[cls.score_same_breath], # large impact
             3
             )
 
 #---------------------------------------------------------------------------+++
-# 2024.09.22
+# 2025.02.03

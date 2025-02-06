@@ -388,7 +388,7 @@ class Columns_Map:
                 bends = pd.Series( list(line['+']) ).str.strip()
                 # copy the actual notes along with bend values
                 mask = bends!=''
-                locs = bends[ mask ].index # need to use .index because can't use same mask for different pd.Series
+                locs = bends[ mask ].index # need to use .index because can't use same mask for different pd.Series with non-matching .index
                 bends.loc[ locs ] = notes[ locs ] + '+' + bends[ locs ]
                 
                 # remember only the bends, no empty space
