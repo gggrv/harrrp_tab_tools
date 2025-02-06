@@ -14,7 +14,7 @@
 
 ## Usage
 
-Since the tools in this repository are targeted towards batch non-editing operations on already existing harmonica tabs, the first step requires the user to actually provide the paths to his already existing harmonica tabs.
+Since the tools in this repository are targeted towards batch non-editing operations on already existing harmonica tabs, the first step requires the user to actually provide the paths to these already existing harmonica tabs.
 
 ### Define paths
 
