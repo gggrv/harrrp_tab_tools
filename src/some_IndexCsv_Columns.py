@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Python static class "Interface to index.csv". Defines necessary metadata fields and relevant functionality. Copyright (C) 2024 Anna Anikina
+#Python static class "Interface to index.csv". Defines necessary metadata fields and relevant functionality. Copyright (C) 2025 Anna Anikina
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ class some_Columns_IndexCsv:
     
     # Static interface that allows to conveniently index the contents of
     # given folder with harmonica tabs.
-    # The resulting index contains minimal
-    # necessary information, that allows to easily understand differences
+    # The resulting index contains minimal necessary information
+    # that allows to easily understand differences
     # between various harmonica tabs, since same song may be tabbed
     # differently.
     
@@ -65,4 +65,4 @@ class some_Columns_IndexCsv:
     score_same_breath = some_Columns_Difficulty.score_same_breath
 
 #---------------------------------------------------------------------------+++
-# 2024.06.18
+# 2025.02.03

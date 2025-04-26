@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Python static class "Interface to Metadata Block Map v4.0.0". Defines necessary metadata fields and relevant functionality. Copyright (C) 2024 Anna Anikina
+#Python static class "Interface to Metadata Block "Map" v4.0.0". Defines necessary metadata fields and relevant functionality. Copyright (C) 2025 Anna Anikina
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -60,43 +60,55 @@ class Columns_Map:
         # because user-defined `mod_function` may save data
         # to a different location and return nothing at all.
         
+        # foolcheck
         if mod_function is None:
             raise ValueError
         elif map_dict is None:
             log.error( 'this song has no map yet' )
             return
             
-        results = []
+        output_results = []
+
+        # run it every line
         if mod_scope==e_ModScopes.line:
             for song_section, paragraphs in map_dict.items():
                 for paragraph in paragraphs:
                     for line in paragraph:
                         result = mod_function( song_section, paragraph, line, harp_dict )
-                        results.append( result )
+                        output_results.append( result )
                         
+        # run it every paragraph
         elif mod_scope==e_ModScopes.paragraph:
             for song_section, paragraphs in map_dict.items():
                 for paragraph in paragraphs:
                     result = mod_function( song_section, paragraph, None, harp_dict )
-                    results.append( result )
+                    output_results.append( result )
                     
+        # run it every section
         elif mod_scope==e_ModScopes.section:
             for song_section in map_dict:
                 result = mod_function( song_section, None, None, harp_dict )
-                results.append( result )
+                output_results.append( result )
                 
+        # something is wrong
         else:
-            raise ValueError
+            raise ValueError( f'Unsupported mod scope: {mod_scope}' )
                     
-        return results
-
+        # give
+        return output_results
 
     @classmethod
     def paste_timecodes( cls, src ):
         
         # This is a convenient function that operates of the text file,
-        # rather then ion .yaml dict, and pastes timecodes to each
+        # rather than on the .yaml dict, and pastes `timecodes` to each
         # map/section/paragraph/line.
+        
+        # `Timecodes` are expected to be in plaintext tab-separated format:
+        # ```
+        # 0.000000  1.000000    text label1 with valid address (section_name/paragraphiloc/lineiloc)
+        # 1.000000  2.000000    text label2 with valid address (section_name/paragraphiloc/lineiloc)
+        # ```
         
         current_address = [
             None, # section_name
@@ -131,53 +143,62 @@ class Columns_Map:
                 log.error( '-- this tab has empty timecodes file: {src}' )
                 return
                 
+            # give
             return timecodes_dict
         
         def __detect_line_address():
             
-            # so at this moment in `line` variable i something from the actual map
+            # so at this moment in `line` variable i see something from
+            # the actual map --- not metadata / other blocks
+
+            # actual beginning of the metadata block
             if line.startswith( 'map:' ):
-                # actual beginning of the metadata block
+                # don't do anything
                 return
             
+            # some item within this section/paragraph/line
             elif line.startswith( '        ' ):
-                # some item within this section/paragraph/line,
                 # don't do anything
                 return
                     
+            # some line within this section/paragraph
             elif line.startswith( '      -' ):
-                # some line within this section/paragraph
                 previous_lineiloc = current_address[2]
+
+                # first line in this paragraph
                 if previous_lineiloc is None:
-                    # first line in this paragraph
                     current_address[2] = 0
+
+                # next line in this paragraph
                 else:
-                    # next line in this paragraph
                     current_address[2] += 1
                     
+            # some paragraphiloc within this section
             elif line.startswith( '    -' ):
-                # some paragraphiloc within this section
                 previous_pariloc = current_address[1]
+
+                # first paragraph in this section
                 if previous_pariloc is None:
-                    # first paragraph in this section
                     current_address[1] = 0
+                    
+                # next paragraph in this section
                 else:
-                    # next paragraph in this section
                     current_address[1] += 1
                 current_address[2] = None # lineiloc
                     
+            # some section name
             elif line.startswith( '  ' ):
-                # some section name
+                # can actually detect the address
                 section_name = line.split( ':' )[0].strip()
                 current_address[0] = section_name
                 current_address[1] = None # pariloc
                 current_address[2] = None # lineiloc
                 
+            # something unknown is happening, probably the map has ended
             else:
-                # something unknown is happening, probably the map has ended
                 return
-            
-            # address is complete and usable
+
+            # give bool that indicated whether parsed address is complete and usable
             return not (
                 ( current_address[0] is None )
                 or ( current_address[1] is None )
@@ -189,7 +210,7 @@ class Columns_Map:
             # paste them at the current address
             
             # make sure i have a timecode for this address
-            address_str = f'{current_address[0]}/{current_address[1]+1}/{current_address[2]+1}'
+            address_str = f'{current_address[0]}/{current_address[1]+1}/{current_address[2]+1}' # iloc counting starts from 1, not 0
             if not address_str in timecodes_dict:
                 return
             timecodes = timecodes_dict[address_str]
@@ -203,38 +224,43 @@ class Columns_Map:
         #------------------------+++
         # Actual code.
         
-        # make sure i actuall have the timecodes
+        # make sure i actually have the timecodes
         timecodes_dict =__parse_timecodes()
         if timecodes_dict is None:
             return
         
-        # iterate tab contents in order to find the map
+        # iterate tab contents in order to find the block with actual map
         lines = readf( src ).split( '\n' )
         is_within_the_map = False
         change_occured = False
-        lineilocs_to_drop = [] # lines with previous timecodes
+        lineilocs_to_drop = [] # lines with previous timecodes that need to be replaced/removed
         for lineiloc, line in enumerate(lines):
             
+            # i am looking at some line within the `map` block
             if is_within_the_map:
-                address_is_usable = __detect_line_address()
+                
+                # regardless of anything, queue old timecodes for deletion
                 if line.startswith( '        timecode_' ):
-                    # delete old timecodes
                     lineilocs_to_drop.append(lineiloc)
+                    
+                # optionally paste new timecodes
+                address_is_usable = __detect_line_address()
                 if address_is_usable:
                     change_occured = __paste_timecodes()
                     
+            # i found the exact line that indicates tha start of the `map` block,
+            # it makes sense to start detecting addresses
             elif line.startswith( 'map:' ):
-                # the mapping starts here, it makes sense to
-                # start detecting addresses
                 is_within_the_map = True
           
-        # delete old timecodes
+        # delete old timecodes that i have found in the loop above
         n_lines_deleted = 0
         for lineiloc in lineilocs_to_drop:
             adjusted_lineiloc = lineiloc - n_lines_deleted
             lines.pop( adjusted_lineiloc )
             n_lines_deleted += 1
                 
+        # save
         if change_occured:
             text = '\n'.join( lines )
             savef( src, text )
@@ -263,11 +289,6 @@ class Columns_Map:
         
         def __parse_line( song_section, paragraph, line, harp_dict ):
                 
-            # TODO
-            # adjust this function to be called every paragraph,
-            # combine all `x` and `+`,
-            # parse combined giant `x` and `+` only once at the end
-                
             #------------------------+++
             # Definitions.
         
@@ -278,13 +299,22 @@ class Columns_Map:
                 phrases = []
                 prev_noteloc = None
                 for noteloc, note in consecutive[consecutive.values].items():
-                    if prev_noteloc is None or noteloc-prev_noteloc>1:
+                    
+                    # i am here or here:
+                    # xxx----xxx (`x` = note, `-` = anything else)
+                    # ↑      ↑
+                    if ( prev_noteloc is None ) or ( noteloc-prev_noteloc > 1 ):
                         prev_noteloc = noteloc
                         phrases.append( notes.loc[noteloc] )
-                    elif noteloc-prev_noteloc==1:
+
+                    # i am here or here:
+                    # xxx----xxx (`x` = note, `-` = anything else)
+                    #  ↑↑     ↑↑
+                    elif noteloc-prev_noteloc == 1:
                         prev_noteloc = noteloc
                         phrases[-1] += notes.loc[noteloc]
                         
+                # give
                 return phrases
             
             def __parse_x():
@@ -320,21 +350,38 @@ class Columns_Map:
                 
                 def __get_jumps( vs ):
                     
-                    # Here I am interested only in the overall
-                    # note differences --- I treat all existing notes as
-                    # one big phrase.
-                    # Any non-notes should be removed before calling
-                    # this function.
+                    # Harmonica tab was like this:
+                    # xxx--x-x-xx-x-xx (`x` = any note, `-` = anything else)
+
+                    # I want to remove the irrelevant characters:
+                    # xxxxxxxxxx (`x` = any note, `-` = anything else)
+                    # (this should be done before calling this function)
+                    
+                    # And convert it into relative harmonica hole differences:
+                    # 0 1 -2 1 2 -3 1 0 0 0
+                    # meaning:
+                    # - first note is 0 higher than prev. note (because there is no prev.note)
+                    # - next note is 1 higher than prev. note
+                    # - third note is 2 lowe than prev. note
+                    # - ...
+
+                    # !!!
+                    # I expect `notes` to be fully specified in the
+                    # `harp/* labels` metadata block
                     
                     # prepare the array
                     holeilocs = pd.Series( index=vs.index, dtype=int )
                     
                     # actually fill the array
-                    hole_labels = harp_dict[Columns_Harmonica.blow_labels]
+                    
+                    # (blow notes)
+                    hole_labels = harp_dict[Columns_Harmonica.blow_labels] # get from specification
                     locs = vs[ vs.isin(hole_labels) ].index
                     if len(locs)>0:
                         holeilocs.loc[locs] = vs[locs].apply( lambda holeiloc: hole_labels.index(holeiloc) )
-                    hole_labels = harp_dict[Columns_Harmonica.draw_labels]
+                        
+                    # (draw notes)
+                    hole_labels = harp_dict[Columns_Harmonica.draw_labels] # get from specification
                     locs = vs[ vs.isin(hole_labels) ].index
                     if len(locs)>0:
                         holeilocs.loc[locs] = vs[locs].apply( lambda holeiloc: hole_labels.index(holeiloc) )
@@ -351,7 +398,7 @@ class Columns_Map:
                 # obtain list of individual notes
                 text = line['x']
                 if len( text.strip() )==0:
-                    log.error( 'this map is not finished - it has template note lines, but no actual note data' )
+                    log.error( 'this map is not finished - it has placeholder note lines, but no actual note data' )
                     return
                 notes = pd.Series( list(text) ).str.strip()
                 
@@ -373,7 +420,7 @@ class Columns_Map:
                 CACHE_PHRASES_SAME_BREATH_D.extend( __phrases_get( notes, same_breath_draw ) )
                 
                 # so at this moment i have saved various phrases from this
-                # line to the big list of phrases --- it will accumulate
+                # line to the big list of phrases; it will accumulate
                 # phrases for the whole map
                 
                 __get_jumps( notes[notes!=''] )
@@ -391,7 +438,7 @@ class Columns_Map:
                 bends = pd.Series( list(line['+']) ).str.strip()
                 # copy the actual notes along with bend values
                 mask = bends!=''
-                locs = bends[ mask ].index # need to use .index because can't use same mask for different pd.Series
+                locs = bends[ mask ].index # need to use .index because can't use same mask for different pd.Series with non-matching .index
                 bends.loc[ locs ] = notes[ locs ] + '+' + bends[ locs ]
                 
                 # remember only the bends, no empty space
@@ -401,16 +448,13 @@ class Columns_Map:
                 bends1 = bends.shift(1)
                 
                 # detect consecutive bends
-                # (this is god tier, this is not humanely possible)
+                # (performing them is god tier, not humanely possible)
                 consecutive = (bends!='') & (bends1!='')
                 CACHE_PHRASES_BENDS.extend( __phrases_get( bends, consecutive ) )
                 
                 # so at this moment i have saved various phrases from this
-                # line to the big list of phrases --- it will accumulate
+                # line to the big list of phrases; it will accumulate
                 # phrases for the whole map
-                # TODO
-                # combine all `x+` and call this function only once for
-                # the giant accumulated `x+`
                 
                 #print()
             
@@ -425,43 +469,51 @@ class Columns_Map:
         #------------------------+++
         # Actual code.
         
-        # examine file contents
+        # failed to get expected results from this mod function,
+        # no reason to attempt scoring unreliable input
         results = cls._data_get( map_dict, harp_dict, __parse_line, e_ModScopes.line )
         if results is None:
-            # failed to get the results from this function,
-            # no reason to attempt scoring unreliable input
             return
-        # in this unique case i save the results to the local arrays
+        
+        # so at this moment i am 100% sure that i have something useful:
+        # in this unique case i save data to the `CACHED_` arrays
         # within the scope of this function, therefore `results`
         # variable is meaningless --- i don't use it, i only use the fact that
         # it is not None
         
         # perform analysis on parsed data
         
-        # melody variety
+        # -- melody variety --
+
+        # no phrases = no notes at all = no variety
         if len(CACHE_PHRASES)==0:
-            # no phrases, even single notes = no notes at all
             result_dict[some_Columns_Difficulty.score_melody_variety] = 0
+
+        # some phrases = can estimate variety
         else:
-            # can use phrases
             s = pd.Series( CACHE_PHRASES )
             score = some_Columns_Difficulty.analyze_melody_variety( s )
             result_dict[some_Columns_Difficulty.score_melody_variety] = score
         
-        # jumps
+        # -- jump score --
+
+        # no jumps, this is odd, variety probably suffers as well
         if len(CACHE_JUMPS)==0:
-            # no jumps, this is odd, variety probably suffers
-            # as well
             result_dict[some_Columns_Difficulty.score_jump] = 0
+
+        # can estimate
         else:
             s = pd.Series( CACHE_JUMPS ).abs() # need only absolute differences between holes
             score = some_Columns_Difficulty.analyze_jump_score( s )
             result_dict[some_Columns_Difficulty.score_jump] = score
         
-        # bends
+        # -- bend score --
+
+        # no bends
         if len(CACHE_BENDS)==0:
-            # no bends
             result_dict[some_Columns_Difficulty.score_bend] = 0
+            
+        # can estimate
         else:
             # convert series into df --- note str VS bend int value
             s = pd.Series( CACHE_BENDS ).str.split( '+', n=1, expand=True )
@@ -469,10 +521,13 @@ class Columns_Map:
             score = some_Columns_Difficulty.analyze_bend_score( s, pd.Series(CACHE_PHRASES) )
             result_dict[some_Columns_Difficulty.score_bend] = score
             
-        # same breath
+        # -- same breath score --
+
+        # no same breath
         if len(CACHE_PHRASES_SAME_BREATH_B)==0 and len(CACHE_PHRASES_SAME_BREATH_D)==0:
-            # no same breath
             result_dict[some_Columns_Difficulty.score_same_breath] = 0
+            
+        # can estimate
         else:
             # score the blow notes
             s = pd.Series(CACHE_PHRASES_SAME_BREATH_B)
@@ -483,17 +538,20 @@ class Columns_Map:
             # combine
             score = round(
                 score_b
-                +score_d,
-                3
+                + score_d
+                #
+                , 3 # rounding
                 )
             result_dict[some_Columns_Difficulty.score_same_breath] = score
         
+        # -- final --
+
         # calculate 2 final scores inplace
         some_Columns_Difficulty.calculate_tier( result_dict )
         some_Columns_Difficulty.calculate_sort_order( result_dict )
         
-        # finish
+        # give
         return result_dict
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2025.04.26

@@ -38,6 +38,7 @@ class Columns_MapSectionParagraphLine:
     bends = '+'
     notes = 'x'
     lyrics = 't'
+    shape = 's' # wip, requires unambiguously parsable shape names specification in `harp` block
 
 #---------------------------------------------------------------------------+++
-# 2024.06.16
+# 2024.09.22

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Python static class "Difficulty Estimator". Calculates complex intelligence data from given inputs. Copyright (C) 2024 Anna Anikina
+#Python static class "Difficulty Estimator". Calculates complex intelligence data from given inputs. Copyright (C) 2025 Anna Anikina
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ class some_Columns_Difficulty:
         #long_phrases_that_contribute_a_lot = phrases_that_contribute_a_lot[ phrases_that_contribute_a_lot.index.str.len() > 1 ]
         #how_many_long_phrases_that_contribute_a_lot = len(long_phrases_that_contribute_a_lot.index)
         
-        variety = round(
+        score = round(
             0.9*how_many_unique_phrases/how_many_phrases # very impactful
             + 0.1*how_many_phrases_contribute_a_little/how_many_phrases # little impact
             + 0.4*how_many_phrases_contribute_a_mid/how_many_phrases # medium impact
@@ -149,7 +149,8 @@ class some_Columns_Difficulty:
             ,3 # rounding
             )
         
-        return variety
+        # give
+        return score
     
     @classmethod
     def analyze_jump_score( cls,
@@ -185,10 +186,11 @@ class some_Columns_Difficulty:
         
         score = round(
             prob_average_jump * average_jump
-            + prob_max_jump * max_jump,
-            3
+            + prob_max_jump * max_jump
+            ,3 # rounding
             )
         
+        # give
         return score
     
     @classmethod
@@ -210,15 +212,19 @@ class some_Columns_Difficulty:
         
         def __get_impact( bend ):
             
+            # no bends
             if bend == 0:
-                # no bends
                 return 0
+            
+            # one bend
             elif bend == 1:
-                # one bend
                 return 0.6
+
+            # 2 bends
             elif bend==2:
-                # 2 bends
                 return 0.9
+            
+            # anything else
             return 1.0
         
         #------------------------+++
@@ -233,8 +239,8 @@ class some_Columns_Difficulty:
         average_count = len( bends_df[1][ (bends_df[1]>=average_bend) & (bends_df[1]<max_bend) ].index )
         max_count = len( bends_df[1][bends_df[1]>=max_bend].index )
         
-        # acceptable = 1 bend
-        # concerning = 2 bends
+        # more or less acceptable = 1 bend
+        # not acceptable and very concerning = 2 bends
         # nope = 3+ bends
         
         impact_average = __get_impact(average_bend)
@@ -250,6 +256,7 @@ class some_Columns_Difficulty:
             )
         score *= percent_of_bent_notes
         
+        # give
         return round( score, 3 )
     
     @classmethod
@@ -265,6 +272,7 @@ class some_Columns_Difficulty:
         # Base sensitivity (how to compare different results):
         # from 0 to 1+ with step 0.01.
         
+        # make sure it is applicable
         if len(s.index)==0:
             # no same breath notes
             return 0
@@ -274,18 +282,23 @@ class some_Columns_Difficulty:
         
         def __get_impact( length ):
             
+            # one note has no impact
             if length <= 1:
-                # one note has no impact
                 return 0
+            
+            # 2 notes
             elif length<=2:
-                # 2 notes
                 return 0.12
+            
+            # 3 notes
             elif length<=3:
-                # 3 notes
                 return 0.4
+            
+            # 4 notes
             elif length<=4:
-                # 4 notes
                 return 0.7
+            
+            # anything else
             return 0.9
         
         #------------------------+++
@@ -307,8 +320,8 @@ class some_Columns_Difficulty:
         
         score = round(
             + impact_avearage * average_count/total_count # varied impact
-            + impact_max * max_count/total_count, # varied impact
-            3
+            + impact_max * max_count/total_count # varied impact
+            ,3 # rounding
             )
         
         return score
@@ -323,13 +336,15 @@ class some_Columns_Difficulty:
         
         def __bend():
             
-            # songs with any kind of bends are automatically high tier
-        
+            # no bends at all
             k = cls.score_bend
             v = user_dict[k]
             if v <= 0:
                 return e_DifficultyTiers.beginner # don't skew votes from other scores
-            if v <= 0.01:
+            
+            # songs with any kind of bends are automatically high tier
+
+            elif v <= 0.01:
                 return e_DifficultyTiers.normal
             elif v <= 0.025:
                 return e_DifficultyTiers.hard
@@ -378,6 +393,7 @@ class some_Columns_Difficulty:
         #------------------------+++
         # Actual code.
         
+        # calc inplace
         user_dict[cls.tier] = max([
             __bend(),
             __jump(),
@@ -399,11 +415,11 @@ class some_Columns_Difficulty:
         
         user_dict[cls.sort_order] = round(
             0.05/max( user_dict[cls.score_melody_variety], 0.0001 ) # not very impactful (boring melodies are harder to play)
-            + 0.5*user_dict[cls.score_jump] # little impact (jumps contribute to difficulty less then other scores)
-            + 20.0*user_dict[cls.score_bend] # large impact & mitigating multiplier because score is 10 times less then others
-            + 0.7*user_dict[cls.score_same_breath], # large impact
-            3
+            + 0.5*user_dict[cls.score_jump] # little impact (jumps contribute to difficulty less than other scores)
+            + 20.0*user_dict[cls.score_bend] # large impact & mitigating multiplier because score is 10 times less than others
+            + 0.7*user_dict[cls.score_same_breath] # large impact
+            ,3 # rounding
             )
 
 #---------------------------------------------------------------------------+++
-# 2024.07.14
+# 2025.02.03
