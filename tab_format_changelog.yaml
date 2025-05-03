@@ -4,7 +4,7 @@
 # purpose of this format:
 # - preserve flexibility and simplicity of human-readable harmonica tabs
 # - explicitly state which harmonica is being used in the most unambiguous way possible
-# - carefully and respectfully handle all relevant credits
+# - carefully and respectfully handle all relevant credits/information
 # - allow beginners to easily access and appropriate written harmonica tabs for personal needs
 # - allow to programmatically switch between different harps / octaves
 # - allow to programmatically switch to a different notation (i.e. render html/txt/pdf/??, use custom note labels)
@@ -18,6 +18,7 @@ version:
   4:
     1:
       0:
+        - added `song/background_contents` tag for easier `song/background` classification
         - added `song/background` tag for short and relevant lore summary of the song, which may affect how the player chooses to perform it
         - added `map/%section%/%paragraph%/%line%/rapid_rant` bool tag for parts that require a lot of creative improvisation from the player and are not meant to be friendly by default
         - renamed `file/lyrics/source` to `file/lyrics/links`
