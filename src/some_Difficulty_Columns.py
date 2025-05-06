@@ -420,6 +420,20 @@ class some_Columns_Difficulty:
             + 0.7*user_dict[cls.score_same_breath] # large impact
             ,3 # rounding
             )
+        
+    @classmethod
+    def convert__tier__to_blues_tier( cls, tier ):
+        
+        if tier == e_DifficultyTiers.beginner:
+            return e_DifficultyTiers.beginner_blues
+        
+        elif tier == e_DifficultyTiers.easy:
+            return e_DifficultyTiers.easy_blues
+        
+        elif tier == e_DifficultyTiers.normal:
+            return e_DifficultyTiers.blues
+        
+        return tier
 
 #---------------------------------------------------------------------------+++
-# 2025.02.03
+# 2025.05.06

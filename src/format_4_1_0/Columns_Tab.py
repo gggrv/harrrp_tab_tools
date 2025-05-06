@@ -29,8 +29,8 @@ from src.common import readf_yaml_ordered
 from src.some_Difficulty_Columns import some_Columns_Difficulty
 from src.some_IndexCsv_Columns import some_Columns_IndexCsv
 #
-from src.format_4_0_0.Columns_Map import Columns_Map
 from src.format_4_0_6.Columns_Harmonica import Columns_Harmonica
+from src.format_4_1_0.Columns_Map import Columns_Map
 from src.format_4_1_0.Columns_Song import Columns_Song
 from src.format_4_1_0.Columns_File import Columns_File
 from src.format_4_1_0.Columns_FileLyrics import Columns_FileLyrics
@@ -138,7 +138,8 @@ class Columns_Tab:
         # make sure i am able to estimate the song difficulty
         result_dict = Columns_Map.estimate_song_difficulty(
             tab_dict[cls.map],
-            tab_dict[cls.harmonica]
+            tab_dict[cls.harmonica],
+            tab_dict[cls.audio_guide],
             )
         if result_dict is None:
             row[some_Columns_IndexCsv.has_map] = '0'
@@ -160,4 +161,4 @@ class Columns_Tab:
         return row
 
 #---------------------------------------------------------------------------+++
-# 2024.06.18
+# 2025.05.06
